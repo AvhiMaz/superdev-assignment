@@ -1,12 +1,13 @@
 use axum::{Json, http::StatusCode, response::IntoResponse};
-use base64::{engine::general_purpose, Engine};
+use base64::{Engine, engine::general_purpose};
 use serde::Deserialize;
 use serde_json::json;
 use solana_program::pubkey::Pubkey;
 
 #[derive(Deserialize)]
 pub struct CreateTokenRequest {
-    mintAuthority: String,
+    #[serde(rename = "mintAuthority")]
+    mint_authority: String,
     mint: String,
     decimals: u8,
 }
@@ -30,7 +31,7 @@ pub async fn create_token(Json(payload): Json<CreateTokenRequest>) -> impl IntoR
         }
     };
 
-    let mint_authority = match payload.mintAuthority.parse::<Pubkey>() {
+    let mint_authority = match payload.mint_authority.parse::<Pubkey>() {
         Ok(pk) => pk,
         Err(_) => {
             return (

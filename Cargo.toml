@@ -27,5 +27,5 @@ hyper = "1.6.0"
 rand_core = "0.6.4"
 
 getrandom = "0.2"
-rand = "0.9.1"
 tower-http = { version = "0.6", features = ["cors"] }
+rand = { version = "0.8", features = ["std"] }

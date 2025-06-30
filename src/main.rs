@@ -21,7 +21,7 @@ async fn main() {
         .route("/message/verify", post(verify_message))
         .route("/send/sol", post(send_sol))
         .route("/send/token", post(send_token))
-        .layer(CorsLayer::new().allow_origin(Any)); // 👈 Add this for CORS
+        .layer(CorsLayer::new().allow_origin(Any));
 
     let listener = TcpListener::bind(&addr).await.expect("Failed to bind");
     println!("Server running at http://{}", addr);

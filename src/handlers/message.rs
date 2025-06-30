@@ -19,6 +19,13 @@ pub struct VerifyMessage {
 }
 
 pub async fn sign_message(Json(body): Json<SignMessage>) -> impl IntoResponse {
+    if body.message.trim().is_empty() || body.secret.trim().is_empty() {
+        return (
+            StatusCode::BAD_REQUEST,
+            Json(json!({ "success": false, "error": "Missing required fields" })),
+        );
+    }
+
     let secret_bytes = match bs58::decode(&body.secret).into_vec() {
         Ok(bytes) => bytes,
         Err(_) => {
@@ -55,6 +62,16 @@ pub async fn sign_message(Json(body): Json<SignMessage>) -> impl IntoResponse {
 }
 
 pub async fn verify_message(Json(body): Json<VerifyMessage>) -> impl IntoResponse {
+    if body.message.trim().is_empty()
+        || body.signature.trim().is_empty()
+        || body.pubkey.trim().is_empty()
+    {
+        return (
+            StatusCode::BAD_REQUEST,
+            Json(json!({ "success": false, "error": "Missing required fields" })),
+        );
+    }
+
     let pubkey_bytes = match bs58::decode(&body.pubkey).into_vec() {
         Ok(bytes) => bytes,
         Err(_) => {
