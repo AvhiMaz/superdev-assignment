@@ -1,5 +1,6 @@
 use axum::{Router, routing::post};
 use tokio::net::TcpListener;
+use tower_http::cors::{CorsLayer, Any};
 
 mod handlers;
 use handlers::*;
@@ -19,7 +20,8 @@ async fn main() {
         .route("/message/sign", post(sign_message))
         .route("/message/verify", post(verify_message))
         .route("/send/sol", post(send_sol))
-        .route("/send/token", post(send_token));
+        .route("/send/token", post(send_token))
+        .layer(CorsLayer::new().allow_origin(Any)); // 👈 Add this for CORS
 
     let listener = TcpListener::bind(&addr).await.expect("Failed to bind");
     println!("Server running at http://{}", addr);
